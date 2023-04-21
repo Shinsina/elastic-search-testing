@@ -7,23 +7,14 @@ const query = {
       should: [
         {
           match: {
-            "content_id.exact": { query: "Three Tips For Chief", boost: 15 },
+            "content_id.exact": { query: "Three Tips For Chief ", boost: 15 },
           },
         },
         {
-          match: { "name.exact": { query: "Three Tips For Chief", boost: 10 } },
+          match: { "name.exact": { query: "Three Tips For Chief ", boost: 10 } },
         },
-        { match: { name: { query: "Three Tips For Chief", boost: 5 } } },
-        {
-          match: {
-            "name.edge": {
-              query: "Three Tips For Chief",
-              operator: "and",
-              boost: 2,
-            },
-          },
-        },
-        { match: { "name.edge": { query: "Three Tips For Chief", boost: 1 } } },
+        { "match_phrase": { name: { query: "Three Tips For Chief ", boost: 5 } } },
+        { "match_phrase": { body: { query: "Three Tips For Chief ", boost: 3 } } }
       ],
       minimum_should_match: 1,
     }),
@@ -47,14 +38,24 @@ const mapping = body.hits.hits
   .map((hit) => ({
     id: Number(hit._id.match(/[0-9]+$/)[0]),
     score: hit._score,
+    sort: hit.sort ? hit.sort[0] : 0
   }))
   .sort((a, b) => {
-    if (a.score < b.score) {
-      return 1;
-    } else if (b.score < a.score) {
-      return -1;
+    if (a.score && b.score) {
+      if (a.score < b.score) {
+        return 1;
+      } else if (b.score < a.score) {
+        return -1;
+      }
+      return 0;
+    } else {
+      if (a.sort[0] < b.sort[0]) {
+        return 1;
+      } else if (b.sort[0] < a.sort[0]) {
+        return -1;
+      }
+      return 0;
     }
-    return 0;
   });
 
 fs.writeFileSync('./output.json', JSON.stringify(mapping));
