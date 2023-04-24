@@ -7,14 +7,14 @@ const query = {
       should: [
         {
           match: {
-            "content_id.exact": { query: "Three Tips For Chief ", boost: 15 },
+            "content_id.exact": { query: "Three Tips For Chief", boost: 15 },
           },
         },
         {
-          match: { "name.exact": { query: "Three Tips For Chief ", boost: 10 } },
+          match: { "name.exact": { query: "Three Tips For Chief", boost: 10 } },
         },
-        { "match_phrase": { name: { query: "Three Tips For Chief ", boost: 5 } } },
-        { "match_phrase": { body: { query: "Three Tips For Chief ", boost: 3 } } }
+        { "match_phrase": { name: { query: "Three Tips For Chief", boost: 5 } } },
+        { "match_phrase": { body: { query: "Three Tips For Chief", boost: 3 } } }
       ],
       minimum_should_match: 1,
     }),
